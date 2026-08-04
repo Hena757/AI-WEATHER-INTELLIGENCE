@@ -20,6 +20,7 @@ dnspython==2.7.0
 duckduckgo_search==8.1.1
 executing==2.0.1
 Flask==3.1.2
+flask-cors==6.0.5
 flatbuffers==25.9.23
 fonttools==4.62.1
 gast==0.6.0
@@ -85,6 +86,7 @@ replicate==1.0.7
 requests==2.32.5
 rpds-py==0.30.0
 scikit-learn==1.7.2
+shap==0.52.0
 scipy==1.16.3
 six==1.16.0
 smmap==5.0.2

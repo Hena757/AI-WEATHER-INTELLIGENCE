@@ -1,0 +1,66 @@
+# Docker Compose configuration for the AI Weather Intelligence Platform
+# Deploys both the Flask API and Streamlit dashboard
+
+version: "3.8"
+
+services:
+  # Flask REST API service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: weather-api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      - FLASK_ENV=production
+      - PORT=8000
+      - MODEL_PATH=/app/models/best_model.joblib
+      - PREPROCESSING_METADATA_PATH=/app/models/preprocessing_metadata.joblib
+      - CLEANED_DATA_PATH=/app/data/processed/cleaned_weather_dataset.csv
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+    volumes:
+      - weather_data:/app/data/cache
+      - weather_reports:/app/reports/explanations
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Streamlit dashboard service
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: weather-dashboard
+    ports:
+      - "${DASHBOARD_PORT:-8501}:8501"
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+    volumes:
+      - weather_data:/app/data/cache
+      - weather_reports:/app/reports/explanations
+    depends_on:
+      - api
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+# Named volumes for persistent data
+volumes:
+  weather_data:
+    driver: local
+  weather_reports:
+    driver: local

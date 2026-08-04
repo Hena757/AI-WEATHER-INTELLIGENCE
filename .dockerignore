@@ -1,0 +1,70 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Data - don't include raw data in Docker image (keep cleaned data for dashboard)
+data/raw/
+
+# Models - keep model files for API and dashboard
+# models/best_model.joblib and preprocessing_metadata.joblib are kept
+
+# Test and development files
+tests/
+notebooks/
+scripts/test_*.py
+scripts/verify_*.py
+
+# Logs and caches
+*.log
+logs/
+data/cache/
+
+# Environment files (secrets should not be baked into image)
+.env
+.env.local
+*.env
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Documentation
+README.md/
+LICENSE/
+
+# Explanation artifacts - will be generated at runtime
+reports/explanations/
+reports/*.png
+reports/*.csv
+reports/preprocessing_report.md
+reports/plots/
